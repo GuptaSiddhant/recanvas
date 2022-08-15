@@ -39,12 +39,7 @@ async function publishCanary(manifest, tag = "canary") {
   writeFileSync(manifestPath, JSON.stringify(canaryManifest, null, 2));
   
   console.log("Publishing", tag, "version:", canaryVersion);
-  const result = await npmPublish({ tag });
-  
-  // Cleanup
-  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-
-  return result
+  return npmPublish({ tag });
 }
 
 /** @param {import("@jsdevtools/npm-publish").Results} results */

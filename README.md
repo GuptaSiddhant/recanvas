@@ -50,6 +50,10 @@ function getCanvasBuffer() {
 }
 ```
 
+## Example
+
+- [Node-HTTP](https://codesandbox.io/s/recanvas-example-nrn9mt?file=/app.js)
+
 ## Future
 
 Need to add support for:
