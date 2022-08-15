@@ -28,7 +28,7 @@ async function publishToNpm() {
 
 async function publishLatest(version) {
   const result = await npmPublish({ checkVersion: true });
-  spawnSync("git", ["tag", "-a" , `v${version}`, "-m", `Release v${version}`]);
+  gitTag(version);
   
   return result;
 }
@@ -37,9 +37,14 @@ async function publishCanary(manifest, tag = "canary") {
   const canaryVersion = `${manifest.version}-${tag}.${Date.now().valueOf()}`;
   const canaryManifest = { ...manifest, version: canaryVersion };
   writeFileSync(manifestPath, JSON.stringify(canaryManifest, null, 2));
-
+  
   console.log("Publishing", tag, "version:", canaryVersion);
-  return npmPublish({ tag });
+  const result = await npmPublish({ tag });
+  
+  // Cleanup
+  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+
+  return result
 }
 
 /** @param {import("@jsdevtools/npm-publish").Results} results */
@@ -64,4 +69,12 @@ function getPublishedVersion(name) {
     encoding: "utf-8",
   });
   return result.stdout.trim().split("\\")[0];
+}
+
+/** @param {string} version */
+function gitTag(version) {
+  spawnSync("git", ["config", "--local", "user.email", `"action@github.com"`])
+  spawnSync("git", ["config", "--local", "user.name", `"GitHub Action"`])
+
+  spawnSync("git", ["tag", "-a" , `v${version}`, "-m", `Release v${version}`]);
 }

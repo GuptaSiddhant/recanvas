@@ -31,8 +31,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Publish to NPM
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          node scripts/publish.js
-          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
+        run: node scripts/publish.js
+
+      - name: Push changes to repo
+        run: git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
