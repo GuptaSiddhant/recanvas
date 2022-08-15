@@ -31,3 +31,13 @@ jobs:
 
       - name: Publish to NPM
         run: node scripts/publish.js
+
+      - name: Create tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: 0.1.6
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
