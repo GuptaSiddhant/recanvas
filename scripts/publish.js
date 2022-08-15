@@ -23,11 +23,14 @@ async function publishToNpm() {
     return await publishCanary(manifest);
   }
 
-  return await publishLatest();
+  return await publishLatest(currentVersion);
 }
 
-async function publishLatest() {
-  return await npmPublish({ checkVersion: true });
+async function publishLatest(version) {
+  const result = await npmPublish({ checkVersion: true });
+  spawnSync("git", ["tag", "-a" , `v${version}`, "-m", `Release v${version}`]);
+  
+  return result;
 }
 
 async function publishCanary(manifest, tag = "canary") {

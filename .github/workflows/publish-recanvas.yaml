@@ -6,6 +6,7 @@ on:
 
 env:
   INPUT_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   publish:
@@ -30,14 +31,8 @@ jobs:
         run: yarn install --immutable
 
       - name: Publish to NPM
-        run: node scripts/publish.js
-
-      - name: Create tag
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: 0.1.6
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag -a "$VERSION" -m "Release $VERSION"
-          git push "https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
+          node scripts/publish.js
+          git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
