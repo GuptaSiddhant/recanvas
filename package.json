@@ -1,0 +1,56 @@
+{
+  "name": "recanvas",
+  "version": "0.1.4",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GuptaSiddhant/recanvas.git"
+  },
+  "author": "Siddhant Gupta <me@guptasiddhant.com>",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "node": "./dist/index.cjs",
+    "import": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "canvas",
+    "yoga",
+    "flex",
+    "node",
+    "image"
+  ],
+  "scripts": {
+    "build": "node scripts/esbuild.js",
+    "build:types": "tsc; echo 'Built recanvas types'",
+    "dev": "node scripts/esbuild.js watch",
+    "serve": "PORT=6001 node scripts/server.js",
+    "test": "nodemon --watch dist --watch scripts/server.js --exec yarn serve",
+    "prepublishOnly": "npm run build:types; npm run build"
+  },
+  "dependencies": {
+    "canvas": "^2.9.3",
+    "react-reconciler": "^0.29.0",
+    "yoga-layout-prebuilt": "^1.10.0"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@jsdevtools/npm-publish": "^1.4.3",
+    "@types/node": "^16.0.0",
+    "@types/react": "^18.0.14",
+    "@types/react-reconciler": "^0",
+    "esbuild": "^0.15.0",
+    "eslint": "^8.18.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "nodemon": "^2.0.19",
+    "typescript": "^4.7.4"
+  }
+}
