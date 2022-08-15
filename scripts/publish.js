@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Script to publish CLI to NPM.
+// Script to publish to NPM.
 // @ts-check
 
 import { npmPublish } from "@jsdevtools/npm-publish";
@@ -17,17 +17,17 @@ async function publishToNpm() {
   const { name, version: currentVersion } = manifest;
   const publishedVersion = getPublishedVersion(name);
 
+  console.log("Current published version:", currentVersion);
+
   if (publishedVersion === currentVersion) {
-    return publishCanary(manifest);
+    return await publishCanary(manifest);
   }
 
-  return publishLatest();
+  return await publishLatest();
 }
 
 async function publishLatest() {
-  const result = await npmPublish({ checkVersion: true });
-
-  return result;
+  return await npmPublish({ checkVersion: true });
 }
 
 async function publishCanary(manifest, tag = "canary") {
@@ -41,7 +41,8 @@ async function publishCanary(manifest, tag = "canary") {
 
 /** @param {import("@jsdevtools/npm-publish").Results} results */
 function handleSuccess({ package: name, tag, version }) {
-  console.log(`Usage: npx ${name}@${tag}`);
+  console.log();
+  console.log(`Usage: npm install ${name}@${tag}`);
   console.log(`Link : https://www.npmjs.com/package/${name}/v/${version}`);
 }
 
