@@ -127,35 +127,35 @@ function applyDimensionStyles(element: DOMElement, style: LayoutStyle): void {
 
   if (typeof width === "number") node.setWidth(width * quality)
   else if (typeof width === "string")
-    node.setWidthPercent(Number.parseInt(width, 10) * quality)
+    node.setWidthPercent(Number.parseInt(width, 10))
   else node.setWidthAuto()
 
   if (typeof height === "number") node.setHeight(height * quality)
   else if (typeof height === "string")
-    node.setHeightPercent(Number.parseInt(height, 10) * quality)
+    node.setHeightPercent(Number.parseInt(height, 10))
   else node.setHeightAuto()
 
   if (minWidth) {
     if (typeof minWidth === "string")
-      node.setMinWidthPercent(Number.parseInt(minWidth, 10) * quality)
+      node.setMinWidthPercent(Number.parseInt(minWidth, 10))
     else node.setMinWidth(minWidth * quality)
   }
 
   if (minHeight) {
     if (typeof minHeight === "string")
-      node.setMinHeightPercent(Number.parseInt(minHeight, 10) * quality)
+      node.setMinHeightPercent(Number.parseInt(minHeight, 10))
     else node.setMinHeight(minHeight * quality)
   }
 
   if (maxWidth) {
     if (typeof maxWidth === "string")
-      node.setMaxWidthPercent(Number.parseInt(maxWidth, 10) * quality)
+      node.setMaxWidthPercent(Number.parseInt(maxWidth, 10))
     else node.setMaxWidth(maxWidth * quality)
   }
 
   if (maxHeight) {
     if (typeof maxHeight === "string")
-      node.setMaxHeightPercent(Number.parseInt(maxHeight, 10) * quality)
+      node.setMaxHeightPercent(Number.parseInt(maxHeight, 10))
     else node.setMaxHeight(maxHeight * quality)
   }
 }

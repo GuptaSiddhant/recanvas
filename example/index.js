@@ -7,6 +7,7 @@ import http from "http"
 createServer()
 
 function getFilenameFromTemplate(template = "") {
+  if (template === "social") return "Social"
   return "Basic"
 }
 
@@ -55,16 +56,16 @@ async function requestListener(req, res) {
 }
 
 async function buildTemplate(template = "") {
-  const filename = getFilenameFromTemplate(template)
+  const filename = getFilenameFromTemplate(template.toLowerCase())
   const currentDirPath = "./example"
   const tempFileName = ".template.js"
   const tempFilePath = `${currentDirPath}/${tempFileName}`
 
   await esbuild
     .build({
-      entryPoints: [`${currentDirPath}/${filename}.jsx`],
+      entryPoints: [`${currentDirPath}/${filename}.tsx`],
       color: true,
-      logLevel: "info",
+      logLevel: "silent",
       target: "es2019",
       outfile: tempFilePath,
       platform: "browser",
