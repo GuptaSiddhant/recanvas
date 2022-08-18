@@ -21,6 +21,6 @@
   "overrides": [{ "files": ["*.ts", "*.tsx"] }],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2019
+    "ecmaVersion": 2020
   }
 }
