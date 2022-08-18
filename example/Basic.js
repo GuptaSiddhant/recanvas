@@ -4,7 +4,7 @@ import { createElement } from "react"
 
 import { Text, View } from "../dist/index.js"
 
-export default function Test({ width }) {
+export default function Basic() {
   return createElement(
     View,
     {
@@ -15,42 +15,45 @@ export default function Test({ width }) {
         padding: 20,
       },
     },
-    createElement(
-      View,
-      {
-        style: {
-          backgroundColor: "blue",
-          padding: 20,
-        },
+    createElement(View1),
+    createElement(View2),
+  )
+}
+
+function View1() {
+  return createElement(
+    View,
+    {
+      style: {
+        backgroundColor: "blue",
+        padding: 20,
+        alignItems: "center",
       },
-      createElement(
-        Text,
-        {
-          style: {
-            color: "white",
-          },
-          font: { size: 32 },
-        },
-        "Hello World",
-      ),
+    },
+    createElement(
+      Text,
+      {
+        style: { size: 32, color: "white" },
+      },
+      "Hello World",
     ),
-    createElement(
-      View,
-      {
-        style: {
-          backgroundColor: "red",
-          padding: 20,
-        },
+  )
+}
+
+function View2() {
+  return createElement(
+    View,
+    {
+      style: {
+        backgroundColor: "red",
+        padding: 20,
+        alignItems: "center",
       },
-      createElement(
-        Text,
-        {
-          style: {
-            color: "white",
-          },
-        },
-        "Hello World from the land of Canvas. It is a beautiful day today.",
-      ),
+    },
+    createElement(
+      Text,
+      {},
+      "Hello World from the land of Canvas. It is a beautiful day today.",
     ),
   )
 }

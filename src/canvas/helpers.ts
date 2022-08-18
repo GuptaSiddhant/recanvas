@@ -1,7 +1,8 @@
 import type { Canvas } from "canvas"
 import { createCanvas } from "canvas"
-import { TEXT_NAME } from "src/dom/constants"
 
+import { TEXT_NAME } from "../dom/constants"
+import store from "../store"
 import type { DOMElement } from "../dom"
 import { generateFontString, wrapText } from "./text"
 
@@ -14,8 +15,7 @@ export function insertViewNode(
   const ctx = canvas.getContext("2d")
   const width = node.yogaNode.getComputedWidth()
   const height = node.yogaNode.getComputedHeight()
-  const color = (node.style as any).backgroundColor
-  console.log("insertViewNode", { x, y, width, height, q: node.quality })
+  const { backgroundColor } = node.style
 
   // const { width, height } = style
   // if (lineWidth) ctx.lineWidth = lineWidth
@@ -26,8 +26,8 @@ export function insertViewNode(
   //   if (constiant === "stroke") ctx.strokeStyle = color
   //   else ctx.fillStyle = color
   // }
-  if (color) {
-    ctx.fillStyle = color
+  if (backgroundColor) {
+    ctx.fillStyle = backgroundColor
     ctx.fillRect(x, y, width, height)
   }
 }
@@ -39,25 +39,23 @@ export function insertTextNode(
   y: number,
 ): void {
   const ctx = canvas.getContext("2d")
-  const { font, style, yogaNode } = node
+  const { style = {}, yogaNode } = node
 
   const maxWidth = yogaNode.getComputedWidth()
-  const { color, backgroundColor } = style
-
-  if (backgroundColor) insertViewNode(canvas, node, x, y)
+  const color = style.color || store.font.color
 
   const child = node.childNodes?.[0]
   if (child.nodeName === TEXT_NAME) {
     const { text } = wrapText(
       child.nodeValue,
       maxWidth,
-      font,
+      style,
       false,
       node.quality,
     )
 
     ctx.textBaseline = "top"
-    ctx.font = generateFontString(font, node.quality)
+    ctx.font = generateFontString(style, node.quality)
     if (color) ctx.fillStyle = color
     ctx.fillText(text, x, y)
   }

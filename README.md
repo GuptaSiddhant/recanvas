@@ -32,23 +32,66 @@ yarn add recanvas
 
 ## Usage
 
+### Generate a canvas
+
 ```jsx
 import { View, Text, renderCanvas } from "recanvas"
 
-function CanvasImage() {
+function generateCanvas() {
+  const canvas = renderCanvas(<SocialImage />, {
+    width: 400,
+    height: 300, // optional, default is equal to width
+    quality: 2, // quality is 1 by default, increase it for better quality (min: 0.1)
+    font: { color: "#ffffff", size: 20 }, // Override default font options
+  })
+
+  return canvas
+}
+
+function SocialImage() {
   return (
-    <View style={{ backgroundColor: "red" }}>
+    <View style={{ backgroundColor: "red", padding: 20 }}>
       <Text style={{ color: "white" }}>Hello World</Text>
     </View>
   )
 }
-
-function getCanvasBuffer() {
-  const canvas = renderCanvas(<CanvasImage />, { width: 300, height: 300 })
-
-  return canvas.toBuffer() // Node.Buffer (mimeType: image/png)
-}
 ```
+
+### Return the image generated as response
+
+- ExpressJs / Node HTTP
+
+  ```js
+  app.get("/image", (req, res) => {
+    const canvas = generateCanvas()
+    const buffer = canvas.toBuffer() // Node.Buffer (default mimeType: image/png)
+
+    res.writeHead(200, {
+      "Content-type": "image/png",
+      "Cache-Control": "public, max-age=2592000",
+      "Content-Length": Buffer.byteLength(buffer).toString(),
+    })
+
+    return res.send(buffer)
+  }
+  ```
+
+- Remix-run / Native Response
+
+  ```js
+  const loader = () => {
+    const canvas = generateCanvas()
+    const buffer = canvas.toBuffer() // Node.Buffer (default mimeType: image/png)
+
+    return new Response(buffer, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=2592000",
+        "Content-Length": Buffer.byteLength(buffer).toString(),
+      },
+    })
+  }
+  ```
 
 ## Example
 

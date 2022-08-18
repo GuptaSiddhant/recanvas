@@ -22,7 +22,12 @@ const server = http.createServer(async function (req, res) {
 
   const mimeType = "image/png" // or "image/jpeg";
   const element = createElement(selectTemplate(template))
-  const canvas = renderCanvas(element, width, height, quality)
+  const canvas = renderCanvas(element, {
+    width,
+    height,
+    quality,
+    font: { size: 20, color: "yellow" },
+  })
   const buffer = canvas.toBuffer(mimeType)
 
   res.writeHead(200, {

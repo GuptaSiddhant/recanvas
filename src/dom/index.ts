@@ -5,16 +5,16 @@
  * @see https://github.com/vadimdemedes/ink/blob/v3.2.0/license
  */
 
+import type { RecanvasStyle } from "../types"
 import { ElementName } from "./constants"
 import { createNode } from "./helpers"
 import reconciler from "./reconciler"
 
 export default function renderDom(
   element: React.ReactNode,
-  style: { width: number; height: number },
-  quality: number,
+  style: RecanvasStyle,
 ) {
-  const root = createNode(ElementName.Root, { style, quality })
+  const root = createNode(ElementName.Root, { style })
 
   const container = reconciler.createContainer(
     root,

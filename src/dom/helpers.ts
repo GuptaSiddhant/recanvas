@@ -10,37 +10,25 @@ import type {
   ElementProps,
   TextNode,
 } from "./dom-types"
-import type { RecanvasStyle, RecanvasFont } from "../types"
-
-let QUALITY = 1
-
-// create
+import type { RecanvasStyle } from "../types"
+import store from "src/store"
 
 export function createNode(
   nodeName: ElementName,
-  props: ElementProps & { quality?: number } = {},
+  props: ElementProps = {},
 ): DOMElement {
-  if (props?.quality && nodeName === ElementName.Root) {
-    QUALITY = Math.max(0.1, props.quality)
-  }
-
   const node: DOMElement = {
     nodeName,
     style: {},
     attributes: {},
     childNodes: [],
-    font: props.font,
     parentNode: null,
     yogaNode: Yoga.Node.create(),
-    quality: QUALITY,
+    quality: store.quality,
   }
 
   if (nodeName === ElementName.Text) {
-    // const font: RecanvasFont = {
-    //   ...node.font,
-    //   size: (node.font?.size || DEFAULT_FONT.size) * QUALITY,
-    // }
-    const measureFunc = measureTextNode.bind(null, node, props.font)
+    const measureFunc = measureTextNode.bind(null, node, props.style)
     node.yogaNode.setMeasureFunc(measureFunc)
   }
 
@@ -61,7 +49,7 @@ export function createTextNode(text: string): TextNode {
     yogaNode: undefined,
     parentNode: null,
     style: {},
-    quality: QUALITY,
+    quality: store.quality,
   }
 
   setTextNodeValue(node, text)
@@ -72,7 +60,7 @@ export function createTextNode(text: string): TextNode {
 // update
 
 export function setStyle(node: DOMNode, style: RecanvasStyle): void {
-  const enrichedStyle = { ...style, quality: QUALITY }
+  const enrichedStyle = { ...style, quality: store.quality }
   node.style = enrichedStyle
   if (node.yogaNode) applyStyles(node, enrichedStyle)
 }

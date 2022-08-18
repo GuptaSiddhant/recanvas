@@ -10,7 +10,6 @@ export type NodeNames = ElementName | TextName
 export type DOMElement = {
   nodeName: ElementName
   childNodes: DOMNode[]
-  font?: RecanvasFont
   attributes: {
     [key: string]: DOMNodeAttribute
   }
@@ -43,5 +42,4 @@ export type DOMNodeAttribute = boolean | string | number
 export interface ElementProps {
   children?: React.ReactNode
   style?: RecanvasStyle
-  font?: RecanvasFont
 }

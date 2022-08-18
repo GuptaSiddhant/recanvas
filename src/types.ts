@@ -1,12 +1,11 @@
-export interface RecanvasStyle extends LayoutStyle, ThemeStyle {}
+export interface RecanvasStyle extends LayoutStyle, ThemeStyle, RecanvasFont {}
 
 export interface ThemeStyle {
   /** Change border color. */
   borderColor?: string
   /** Change background color. */
   backgroundColor?: string
-  /** Change text color.*/
-  color?: string
+
   /** Add a border with a specified style. If `borderStyle` is `undefined` (which it is by default), no border will be added. */
   borderStyle?: "round" | "bevel" | "miter"
 }
@@ -25,6 +24,9 @@ export interface RecanvasFont {
   lineHeight?: number
   /** truncate text or let it wrap */
   truncate?: boolean
+
+  /** Change text color.*/
+  color?: string
 }
 
 export enum RecanvasFontFamily {

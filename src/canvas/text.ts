@@ -1,32 +1,17 @@
 import { createCanvas } from "canvas"
-import {
-  type RecanvasFont,
-  RecanvasFontFamily,
-  RecanvasFontStyle,
-  RecanvasFontVariant,
-  RecanvasFontWeight,
-} from "../types"
-
-export const DEFAULT_FONT: Required<RecanvasFont> = {
-  size: 16,
-  family: RecanvasFontFamily.SansSerif,
-  weight: RecanvasFontWeight.Normal,
-  style: RecanvasFontStyle.Normal,
-  variant: RecanvasFontVariant.Normal,
-  lineHeight: 1.25,
-  truncate: false,
-}
+import store from "src/store"
+import { type RecanvasFont } from "../types"
 
 export function generateFontString(
   font: RecanvasFont = {},
   quality: number = 1,
 ) {
   const {
-    family = DEFAULT_FONT.family,
-    size = DEFAULT_FONT.size,
-    style = DEFAULT_FONT.style,
-    variant = DEFAULT_FONT.variant,
-    weight = DEFAULT_FONT.weight,
+    family = store.font.family,
+    size = store.font.size,
+    style = store.font.style,
+    variant = store.font.variant,
+    weight = store.font.weight,
   } = font
 
   return `${style} ${variant} ${weight} ${size * quality}px "${family}"`
@@ -78,7 +63,7 @@ export function measureText(
 ): TextMeasure {
   if (text.length === 0) return { width: 0, height: 0 }
 
-  const lineHeight = (font?.lineHeight || DEFAULT_FONT.lineHeight) * quality
+  const lineHeight = (font?.lineHeight || store.font.lineHeight) * quality
   const canvas = createCanvas(1000, 1000)
   const context = canvas.getContext("2d")
   context.font = generateFontString(font, quality)
