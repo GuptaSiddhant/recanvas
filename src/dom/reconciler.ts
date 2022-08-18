@@ -1,6 +1,6 @@
 import createReconciler, { type Fiber, type HostConfig } from "react-reconciler"
 
-import Yoga from "../yoga"
+import Yoga from "yoga-layout-prebuilt"
 import { ElementName } from "./constants"
 import {
   appendChildNode,
@@ -13,14 +13,14 @@ import {
   setStyle,
   setTextNodeValue,
 } from "./helpers"
-import type { Styles } from "./style"
+import type { RecanvasStyle } from "../types"
 import type {
   DOMElement,
   DOMNode,
   DOMNodeAttribute,
   ElementProps,
   TextNode,
-} from "./types"
+} from "./dom-types"
 
 interface HostContext {
   isInsideText: boolean
@@ -66,7 +66,7 @@ const hostConfig: HostConfig<
     return { isInsideText: false }
   },
 
-  getChildHostContext(parentHostContext, type, rootContainer) {
+  getChildHostContext(parentHostContext, type) {
     const previousIsInsideText = parentHostContext.isInsideText
     const isInsideText = type === "canvas-text"
 
@@ -186,29 +186,15 @@ function createUpdatePayload(
         typeof oldProps.style === "object"
 
       if (isStyle) {
-        const newStyle = newProps.style as Styles
-        const oldStyle = oldProps.style as Styles
-        const styleKeys = Object.keys(newStyle) as Array<keyof Styles>
+        const newStyle = newProps.style as RecanvasStyle
+        const oldStyle = oldProps.style as RecanvasStyle
+        const styleKeys = Object.keys(newStyle) as Array<keyof RecanvasStyle>
 
         for (const styleKey of styleKeys) {
-          // Always include `borderColor` and `borderStyle` to ensure border is rendered,
-          // otherwise resulting `updatePayload` may not contain them
-          // if they weren't changed during this update
-          if (styleKey === "borderStyle" || styleKey === "borderColor") {
-            if (typeof updatePayload.style !== "object") {
-              // Linter didn't like `= {} as Style`
-              const style: Styles = {}
-              updatePayload.style = style
-            }
-
-            ;(updatePayload.style as any).borderStyle = newStyle.borderStyle
-            ;(updatePayload.style as any).borderColor = newStyle.borderColor
-          }
-
           if (newStyle[styleKey] !== oldStyle[styleKey]) {
             if (typeof updatePayload.style !== "object") {
               // Linter didn't like `= {} as Style`
-              const style: Styles = {}
+              const style: RecanvasStyle = {}
               updatePayload.style = style
             }
 

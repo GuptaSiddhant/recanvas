@@ -1,6 +1,7 @@
-import Yoga from "../yoga"
+import Yoga from "yoga-layout-prebuilt"
+
 import { ElementName, TEXT_NAME } from "./constants"
-import applyStyles, { type Styles } from "./style"
+import applyStyles from "./style"
 import { measureTextNode } from "./text"
 import type {
   DOMElement,
@@ -8,14 +9,21 @@ import type {
   DOMNodeAttribute,
   ElementProps,
   TextNode,
-} from "./types"
+} from "./dom-types"
+import type { RecanvasStyle, RecanvasFont } from "../types"
+
+let QUALITY = 1
 
 // create
 
 export function createNode(
   nodeName: ElementName,
-  props: ElementProps = {},
+  props: ElementProps & { quality?: number } = {},
 ): DOMElement {
+  if (props?.quality && nodeName === ElementName.Root) {
+    QUALITY = Math.max(0.1, props.quality)
+  }
+
   const node: DOMElement = {
     nodeName,
     style: {},
@@ -24,10 +32,15 @@ export function createNode(
     font: props.font,
     parentNode: null,
     yogaNode: Yoga.Node.create(),
+    quality: QUALITY,
   }
 
   if (nodeName === ElementName.Text) {
-    const measureFunc = measureTextNode.bind(null, node, node.font)
+    // const font: RecanvasFont = {
+    //   ...node.font,
+    //   size: (node.font?.size || DEFAULT_FONT.size) * QUALITY,
+    // }
+    const measureFunc = measureTextNode.bind(null, node, props.font)
     node.yogaNode.setMeasureFunc(measureFunc)
   }
 
@@ -48,6 +61,7 @@ export function createTextNode(text: string): TextNode {
     yogaNode: undefined,
     parentNode: null,
     style: {},
+    quality: QUALITY,
   }
 
   setTextNodeValue(node, text)
@@ -57,9 +71,10 @@ export function createTextNode(text: string): TextNode {
 
 // update
 
-export function setStyle(node: DOMNode, style: Styles): void {
-  node.style = style
-  if (node.yogaNode) applyStyles(node.yogaNode, style)
+export function setStyle(node: DOMNode, style: RecanvasStyle): void {
+  const enrichedStyle = { ...style, quality: QUALITY }
+  node.style = enrichedStyle
+  if (node.yogaNode) applyStyles(node, enrichedStyle)
 }
 
 export function setTextNodeValue(node: TextNode, text: string): void {

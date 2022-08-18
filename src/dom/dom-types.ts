@@ -1,8 +1,7 @@
 import type Yoga from "yoga-layout-prebuilt"
 
+import type { RecanvasStyle, RecanvasFont } from "../types"
 import type { ElementName, TextName } from "./constants"
-import type { Styles } from "./style"
-import type { RecanvasFont } from "./text"
 
 export type OutputTransformer = (s: string) => string
 
@@ -15,18 +14,20 @@ export type DOMElement = {
   attributes: {
     [key: string]: DOMNodeAttribute
   }
+  quality: number
 } & Node
 
 interface Node {
   parentNode: DOMElement | null
   yogaNode: Yoga.YogaNode
-  style: Styles
+  style: RecanvasStyle
 }
 
 export type TextNode = Omit<Node, "yogaNode"> & {
   nodeName: TextName
   nodeValue: string
   yogaNode: undefined
+  quality: number
 }
 
 export type DOMNode<T = { nodeName: NodeNames }> = T extends {
@@ -41,6 +42,6 @@ export type DOMNodeAttribute = boolean | string | number
 
 export interface ElementProps {
   children?: React.ReactNode
-  style?: Styles
+  style?: RecanvasStyle
   font?: RecanvasFont
 }

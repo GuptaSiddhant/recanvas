@@ -2,8 +2,8 @@ import { type Canvas, createCanvas } from "canvas"
 import { ElementName } from "src/dom/constants"
 
 import type { DOMNode } from "../dom"
-import Yoga from "../yoga"
-import { insertTextNode, insertViewNode, resizeCanvas } from "./helpers"
+import Yoga from "yoga-layout-prebuilt"
+import { clearCanvas, insertTextNode, insertViewNode } from "./helpers"
 
 export default function render(node: DOMNode): Canvas {
   if (!node.yogaNode)
@@ -17,7 +17,6 @@ export default function render(node: DOMNode): Canvas {
   )
 
   renderDOMNodeToCanvas(canvas, node)
-  resizeCanvas(canvas, 0.75)
 
   return canvas
 }
@@ -30,6 +29,7 @@ function renderDOMNodeToCanvas(
   const { yogaNode, nodeName } = node
   const { offsetX = 0, offsetY = 0 } = options
 
+  if (nodeName === ElementName.Root) clearCanvas(canvas)
   if (nodeName === ElementName.VirtualText) return
   if (!yogaNode) return
   if (yogaNode.getDisplay() === Yoga.DISPLAY_NONE) return

@@ -1,282 +1,180 @@
-import Yoga from "../yoga"
+import Yoga from "yoga-layout-prebuilt"
 
-export interface Styles {
-  truncate?: boolean
-  position?: "absolute" | "relative"
-
-  /** Top margin. */
-  marginTop?: number
-
-  /** Bottom margin. */
-  marginBottom?: number
-
-  /** Left margin. */
-  marginLeft?: number
-
-  /** Right margin. */
-  marginRight?: number
-
-  /** Top padding. */
-  paddingTop?: number
-
-  /** Bottom padding. */
-  paddingBottom?: number
-
-  /** Left padding. */
-  paddingLeft?: number
-
-  /** Right padding. */
-  paddingRight?: number
-
-  /** This property defines the ability for a flex item to grow if necessary. See [flex-grow](https://css-tricks.com/almanac/properties/f/flex-grow/). */
-  flexGrow?: number
-
-  /** It specifies the “flex shrink factor”, which determines how much the flex item will shrink relative to the rest of the flex items in the flex container when there isn’t enough space on the row. See [flex-shrink](https://css-tricks.com/almanac/properties/f/flex-shrink/). */
-  flexShrink?: number
-
-  /** It establishes the main-axis, thus defining the direction flex items are placed in the flex container. See [flex-direction](https://css-tricks.com/almanac/properties/f/flex-direction/). */
-  flexDirection?: "row" | "column" | "row-reverse" | "column-reverse"
-
-  /** It specifies the initial size of the flex item, before any available space is distributed according to the flex factors. See [flex-basis](https://css-tricks.com/almanac/properties/f/flex-basis/). */
-  flexBasis?: number | string
-
-  /** The align-items property defines the default behavior for how items are laid out along the cross axis (perpendicular to the main axis). See [align-items](https://css-tricks.com/almanac/properties/a/align-items/). */
-  alignItems?: "flex-start" | "center" | "flex-end" | "stretch"
-
-  /** It makes possible to override the align-items value for specific flex items. See [align-self](https://css-tricks.com/almanac/properties/a/align-self/). */
-  alignSelf?: "flex-start" | "center" | "flex-end" | "auto"
-
-  /** It defines the alignment along the main axis. See [justify-content](https://css-tricks.com/almanac/properties/j/justify-content/). */
-  justifyContent?:
-    | "flex-start"
-    | "flex-end"
-    | "space-between"
-    | "space-around"
-    | "center"
-
-  /** Width of the element in spaces. You can also set it in percent, which will calculate the width based on the width of parent element. */
-  width?: number | string
-
-  /** Height of the element in lines (rows). You can also set it in percent, which will calculate the height based on the height of parent element. */
-  height?: number | string
-
-  /** Sets a minimum width of the element. */
-  minWidth?: number | string
-
-  /** Sets a minimum height of the element. */
-  minHeight?: number | string
-
-  /** Set this property to `none` to hide the element. */
-  display?: "flex" | "none"
-
-  /** Add a border with a specified style. If `borderStyle` is `undefined` (which it is by default), no border will be added. */
-  borderStyle?: "round" | "bevel" | "miter"
-
-  /** Change border color. Accepts the same values as `color` in <Text> component. */
-  borderColor?: string
-}
+import type { LayoutStyle } from "../types"
+import type { DOMElement } from "./dom-types"
 
 export default function applyStyles(
-  node: Yoga.YogaNode,
-  style: Styles = {},
+  element: DOMElement,
+  style: LayoutStyle = {},
 ): void {
-  applyPositionStyles(node, style)
-  applyMarginStyles(node, style)
-  applyPaddingStyles(node, style)
-  applyFlexStyles(node, style)
-  applyDimensionStyles(node, style)
-  applyDisplayStyles(node, style)
-  applyBorderStyles(node, style)
+  if (!element.yogaNode) return
+  applyPositionStyles(element, style)
+  applyMarginStyles(element, style)
+  applyPaddingStyles(element, style)
+  applyFlexStyles(element, style)
+  applyDimensionStyles(element, style)
+  applyDisplayStyles(element, style)
+  applyBorderStyles(element, style)
 }
 
-function applyPositionStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("position" in style) {
-    node.setPositionType(
-      style.position === "absolute"
-        ? Yoga.POSITION_TYPE_ABSOLUTE
-        : Yoga.POSITION_TYPE_RELATIVE,
-    )
-  }
+function applyPositionStyles(
+  { yogaNode }: DOMElement,
+  style: LayoutStyle,
+): void {
+  yogaNode.setPositionType(
+    style.position === "absolute"
+      ? Yoga.POSITION_TYPE_ABSOLUTE
+      : Yoga.POSITION_TYPE_RELATIVE,
+  )
 }
 
-function applyMarginStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("marginLeft" in style) {
-    node.setMargin(Yoga.EDGE_START, style.marginLeft || 0)
-  }
+function applyMarginStyles(element: DOMElement, style: LayoutStyle): void {
+  const { quality, yogaNode: node } = element
+  const { margin, marginHorizontal, marginVertical } = style
+  const marginLeft = margin || marginHorizontal || style.marginLeft
+  const marginRight = margin || marginHorizontal || style.marginRight
+  const marginTop = margin || marginVertical || style.marginTop
+  const marginBottom = margin || marginVertical || style.marginBottom
 
-  if ("marginRight" in style) {
-    node.setMargin(Yoga.EDGE_END, style.marginRight || 0)
-  }
-
-  if ("marginTop" in style) {
-    node.setMargin(Yoga.EDGE_TOP, style.marginTop || 0)
-  }
-
-  if ("marginBottom" in style) {
-    node.setMargin(Yoga.EDGE_BOTTOM, style.marginBottom || 0)
-  }
+  if (marginLeft) node.setMargin(Yoga.EDGE_START, marginLeft * quality)
+  if (marginRight) node.setMargin(Yoga.EDGE_END, marginRight * quality)
+  if (marginTop) node.setMargin(Yoga.EDGE_TOP, marginTop * quality)
+  if (marginBottom) node.setMargin(Yoga.EDGE_BOTTOM, marginBottom * quality)
 }
 
-function applyPaddingStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("paddingLeft" in style) {
-    node.setPadding(Yoga.EDGE_LEFT, style.paddingLeft || 0)
-  }
+function applyPaddingStyles(element: DOMElement, style: LayoutStyle): void {
+  const { quality, yogaNode: node } = element
+  const { padding, paddingHorizontal, paddingVertical } = style
+  const paddingLeft = padding || paddingHorizontal || style.paddingLeft
+  const paddingRight = padding || paddingHorizontal || style.paddingRight
+  const paddingTop = padding || paddingVertical || style.paddingTop
+  const paddingBottom = padding || paddingVertical || style.paddingBottom
 
-  if ("paddingRight" in style) {
-    node.setPadding(Yoga.EDGE_RIGHT, style.paddingRight || 0)
-  }
-
-  if ("paddingTop" in style) {
-    node.setPadding(Yoga.EDGE_TOP, style.paddingTop || 0)
-  }
-
-  if ("paddingBottom" in style) {
-    node.setPadding(Yoga.EDGE_BOTTOM, style.paddingBottom || 0)
-  }
+  if (paddingLeft) node.setPadding(Yoga.EDGE_LEFT, paddingLeft * quality)
+  if (paddingRight) node.setPadding(Yoga.EDGE_RIGHT, paddingRight * quality)
+  if (paddingTop) node.setPadding(Yoga.EDGE_TOP, paddingTop * quality)
+  if (paddingBottom) node.setPadding(Yoga.EDGE_BOTTOM, paddingBottom * quality)
 }
 
-function applyFlexStyles(node: Yoga.YogaNode, style: Styles): void {
-  node.setFlexGrow(style.flexGrow ?? 1)
+function applyFlexStyles(element: DOMElement, style: LayoutStyle): void {
+  const { yogaNode: node } = element
+  const { flexGrow, flexDirection, flexShrink, flexBasis } = style
 
-  if ("flexShrink" in style) {
-    node.setFlexShrink(
-      typeof style.flexShrink === "number" ? style.flexShrink : 1,
-    )
+  // Always grow equally
+  node.setFlexGrow(flexGrow ?? 1)
+
+  if (flexShrink)
+    node.setFlexShrink(typeof flexShrink === "number" ? flexShrink : 1)
+
+  const yogaFlexDirection =
+    flexDirection === "column"
+      ? Yoga.FLEX_DIRECTION_COLUMN
+      : flexDirection === "column-reverse"
+      ? Yoga.FLEX_DIRECTION_COLUMN_REVERSE
+      : flexDirection === "row-reverse"
+      ? Yoga.FLEX_DIRECTION_ROW_REVERSE
+      : Yoga.FLEX_DIRECTION_ROW
+  node.setFlexDirection(yogaFlexDirection)
+
+  if (flexBasis) {
+    if (typeof flexBasis === "number") node.setFlexBasis(flexBasis)
+    else if (typeof flexBasis === "string")
+      node.setFlexBasisPercent(Number.parseInt(flexBasis, 10))
+    // This should be replaced with node.setFlexBasisAuto() when new Yoga release is out
+    else node.setFlexBasis(NaN)
   }
 
-  if (style.flexDirection === "column") {
-    node.setFlexDirection(Yoga.FLEX_DIRECTION_COLUMN)
-  } else if (style.flexDirection === "row-reverse") {
-    node.setFlexDirection(Yoga.FLEX_DIRECTION_ROW_REVERSE)
-  } else if (style.flexDirection === "column-reverse") {
-    node.setFlexDirection(Yoga.FLEX_DIRECTION_COLUMN_REVERSE)
-  } else {
-    node.setFlexDirection(Yoga.FLEX_DIRECTION_ROW)
-  }
+  const { alignItems, alignSelf, justifyContent } = style
 
-  if ("flexBasis" in style) {
-    if (typeof style.flexBasis === "number") {
-      node.setFlexBasis(style.flexBasis)
-    } else if (typeof style.flexBasis === "string") {
-      node.setFlexBasisPercent(Number.parseInt(style.flexBasis, 10))
-    } else {
-      // This should be replaced with node.setFlexBasisAuto() when new Yoga release is out
-      node.setFlexBasis(NaN)
-    }
-  }
+  const yogaAlignItems =
+    alignItems === "flex-start"
+      ? Yoga.ALIGN_FLEX_START
+      : alignItems === "flex-end"
+      ? Yoga.ALIGN_FLEX_END
+      : alignItems === "center"
+      ? Yoga.ALIGN_CENTER
+      : Yoga.ALIGN_STRETCH
+  node.setAlignItems(yogaAlignItems)
 
-  if ("alignItems" in style) {
-    if (style.alignItems === "stretch" || !style.alignItems) {
-      node.setAlignItems(Yoga.ALIGN_STRETCH)
-    }
+  const yogaAlignSelf =
+    alignSelf === "flex-start"
+      ? Yoga.ALIGN_FLEX_START
+      : alignSelf === "flex-end"
+      ? Yoga.ALIGN_FLEX_END
+      : alignSelf === "center"
+      ? Yoga.ALIGN_CENTER
+      : Yoga.ALIGN_AUTO
+  node.setAlignSelf(yogaAlignSelf)
 
-    if (style.alignItems === "flex-start") {
-      node.setAlignItems(Yoga.ALIGN_FLEX_START)
-    }
-
-    if (style.alignItems === "center") {
-      node.setAlignItems(Yoga.ALIGN_CENTER)
-    }
-
-    if (style.alignItems === "flex-end") {
-      node.setAlignItems(Yoga.ALIGN_FLEX_END)
-    }
-  }
-
-  if ("alignSelf" in style) {
-    if (style.alignSelf === "auto" || !style.alignSelf) {
-      node.setAlignSelf(Yoga.ALIGN_AUTO)
-    }
-
-    if (style.alignSelf === "flex-start") {
-      node.setAlignSelf(Yoga.ALIGN_FLEX_START)
-    }
-
-    if (style.alignSelf === "center") {
-      node.setAlignSelf(Yoga.ALIGN_CENTER)
-    }
-
-    if (style.alignSelf === "flex-end") {
-      node.setAlignSelf(Yoga.ALIGN_FLEX_END)
-    }
-  }
-
-  if ("justifyContent" in style) {
-    if (style.justifyContent === "flex-start" || !style.justifyContent) {
-      node.setJustifyContent(Yoga.JUSTIFY_FLEX_START)
-    }
-
-    if (style.justifyContent === "center") {
-      node.setJustifyContent(Yoga.JUSTIFY_CENTER)
-    }
-
-    if (style.justifyContent === "flex-end") {
-      node.setJustifyContent(Yoga.JUSTIFY_FLEX_END)
-    }
-
-    if (style.justifyContent === "space-between") {
-      node.setJustifyContent(Yoga.JUSTIFY_SPACE_BETWEEN)
-    }
-
-    if (style.justifyContent === "space-around") {
-      node.setJustifyContent(Yoga.JUSTIFY_SPACE_AROUND)
-    }
-  }
+  const yogaJustifyContent =
+    justifyContent === "space-between"
+      ? Yoga.JUSTIFY_SPACE_BETWEEN
+      : justifyContent === "space-around"
+      ? Yoga.JUSTIFY_SPACE_AROUND
+      : justifyContent === "space-evenly"
+      ? Yoga.JUSTIFY_SPACE_EVENLY
+      : justifyContent === "center"
+      ? Yoga.JUSTIFY_CENTER
+      : justifyContent === "flex-end"
+      ? Yoga.JUSTIFY_FLEX_END
+      : Yoga.JUSTIFY_FLEX_START
+  node.setAlignSelf(yogaJustifyContent)
 }
 
-function applyDimensionStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("width" in style) {
-    if (typeof style.width === "number") {
-      node.setWidth(style.width)
-    } else if (typeof style.width === "string") {
-      node.setWidthPercent(Number.parseInt(style.width, 10))
-    } else {
-      node.setWidthAuto()
-    }
+function applyDimensionStyles(element: DOMElement, style: LayoutStyle): void {
+  const { quality, yogaNode: node } = element
+  const { width, height, minWidth, minHeight, maxHeight, maxWidth } = style
+
+  if (typeof width === "number") node.setWidth(width * quality)
+  else if (typeof width === "string")
+    node.setWidthPercent(Number.parseInt(width, 10) * quality)
+  else node.setWidthAuto()
+
+  if (typeof height === "number") node.setHeight(height * quality)
+  else if (typeof height === "string")
+    node.setHeightPercent(Number.parseInt(height, 10) * quality)
+  else node.setHeightAuto()
+
+  if (minWidth) {
+    if (typeof minWidth === "string")
+      node.setMinWidthPercent(Number.parseInt(minWidth, 10) * quality)
+    else node.setMinWidth(minWidth * quality)
   }
 
-  if ("height" in style) {
-    if (typeof style.height === "number") {
-      node.setHeight(style.height)
-    } else if (typeof style.height === "string") {
-      node.setHeightPercent(Number.parseInt(style.height, 10))
-    } else {
-      node.setHeightAuto()
-    }
+  if (minHeight) {
+    if (typeof minHeight === "string")
+      node.setMinHeightPercent(Number.parseInt(minHeight, 10) * quality)
+    else node.setMinHeight(minHeight * quality)
   }
 
-  if ("minWidth" in style) {
-    if (typeof style.minWidth === "string") {
-      node.setMinWidthPercent(Number.parseInt(style.minWidth, 10))
-    } else {
-      node.setMinWidth(style.minWidth ?? 0)
-    }
+  if (maxWidth) {
+    if (typeof maxWidth === "string")
+      node.setMaxWidthPercent(Number.parseInt(maxWidth, 10) * quality)
+    else node.setMaxWidth(maxWidth * quality)
   }
 
-  if ("minHeight" in style) {
-    if (typeof style.minHeight === "string") {
-      node.setMinHeightPercent(Number.parseInt(style.minHeight, 10))
-    } else {
-      node.setMinHeight(style.minHeight ?? 0)
-    }
+  if (maxHeight) {
+    if (typeof maxHeight === "string")
+      node.setMaxHeightPercent(Number.parseInt(maxHeight, 10) * quality)
+    else node.setMaxHeight(maxHeight * quality)
   }
 }
 
-function applyDisplayStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("display" in style && style.display === "none") {
-    node.setDisplay(Yoga.DISPLAY_NONE)
-  } else {
-    node.setDisplay(Yoga.DISPLAY_FLEX)
-  }
+function applyDisplayStyles(
+  element: DOMElement,
+  { display }: LayoutStyle,
+): void {
+  const { yogaNode: node } = element
+  if (display === "none") node.setDisplay(Yoga.DISPLAY_NONE)
+  else node.setDisplay(Yoga.DISPLAY_FLEX)
 }
 
-function applyBorderStyles(node: Yoga.YogaNode, style: Styles): void {
-  if ("borderStyle" in style) {
-    const borderWidth = typeof style.borderStyle === "string" ? 1 : 0
+function applyBorderStyles(element: DOMElement, style: LayoutStyle): void {
+  const { quality, yogaNode: node } = element
+  const { borderWidth = 0 } = style
 
-    node.setBorder(Yoga.EDGE_TOP, borderWidth)
-    node.setBorder(Yoga.EDGE_BOTTOM, borderWidth)
-    node.setBorder(Yoga.EDGE_LEFT, borderWidth)
-    node.setBorder(Yoga.EDGE_RIGHT, borderWidth)
-  }
+  node.setBorder(Yoga.EDGE_TOP, borderWidth * quality)
+  node.setBorder(Yoga.EDGE_BOTTOM, borderWidth * quality)
+  node.setBorder(Yoga.EDGE_LEFT, borderWidth * quality)
+  node.setBorder(Yoga.EDGE_RIGHT, borderWidth * quality)
 }

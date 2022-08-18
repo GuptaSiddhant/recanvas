@@ -8,16 +8,13 @@
 import { ElementName } from "./constants"
 import { createNode } from "./helpers"
 import reconciler from "./reconciler"
-import type { Styles } from "./style"
-import type { RecanvasFont } from "./text"
 
 export default function renderDom(
   element: React.ReactNode,
-  style: Styles & { width: number; height: number },
-  font?: RecanvasFont,
-  callback?: () => void,
+  style: { width: number; height: number },
+  quality: number,
 ) {
-  const root = createNode(ElementName.Root, { style, font })
+  const root = createNode(ElementName.Root, { style, quality })
 
   const container = reconciler.createContainer(
     root,
@@ -30,9 +27,9 @@ export default function renderDom(
     null,
   )
 
-  reconciler.updateContainer(element, container, null, callback)
+  reconciler.updateContainer(element, container, null)
 
   return root
 }
 
-export * from "./types"
+export * from "./dom-types"

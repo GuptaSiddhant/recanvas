@@ -1,7 +1,8 @@
-import type { RecanvasFont, TextMeasure } from "../canvas/text"
+import type { RecanvasFont } from "../types"
+import type { TextMeasure } from "../canvas/text"
 import { measureText, wrapText } from "../canvas/text"
 import { ElementName, TEXT_NAME } from "./constants"
-import type { DOMElement, DOMNode } from "./types"
+import type { DOMElement, DOMNode } from "./dom-types"
 
 export function squashTextNodes(element: DOMElement): string {
   let text = ""
@@ -36,7 +37,7 @@ export function measureTextNode(
   const text =
     node.nodeName === TEXT_NAME ? node.nodeValue : squashTextNodes(node)
 
-  const dimensions = measureText(text, font)
+  const dimensions = measureText(text, font, node.quality)
 
   // Text fits into container, no need to wrap
   if (dimensions.width <= maxWidth) {
@@ -49,11 +50,11 @@ export function measureTextNode(
     return dimensions
   }
 
-  const truncate = node.style.truncate
-  const { height, width } = wrapText(text, maxWidth, font, truncate)
+  const truncate = font?.truncate
+  const quality = node.quality
+  const { height, width } = wrapText(text, maxWidth, font, truncate, quality)
 
   return { height, width }
 }
 
-export { measureText, wrapText }
-export type { RecanvasFont, TextMeasure }
+export type { TextMeasure }

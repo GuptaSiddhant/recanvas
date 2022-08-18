@@ -15,6 +15,7 @@ export function insertViewNode(
   const width = node.yogaNode.getComputedWidth()
   const height = node.yogaNode.getComputedHeight()
   const color = (node.style as any).backgroundColor
+  console.log("insertViewNode", { x, y, width, height, q: node.quality })
 
   // const { width, height } = style
   // if (lineWidth) ctx.lineWidth = lineWidth
@@ -38,28 +39,36 @@ export function insertTextNode(
   y: number,
 ): void {
   const ctx = canvas.getContext("2d")
-  const color = (node.style as any).color
-  const font = node.font
-  const maxWidth = node.yogaNode.getComputedWidth()
-  const backgroundColor = (node.style as any).backgroundColor
-  if (backgroundColor) {
-    insertViewNode(canvas, node, x, y)
-  }
+  const { font, style, yogaNode } = node
+
+  const maxWidth = yogaNode.getComputedWidth()
+  const { color, backgroundColor } = style
+
+  if (backgroundColor) insertViewNode(canvas, node, x, y)
 
   const child = node.childNodes?.[0]
   if (child.nodeName === TEXT_NAME) {
-    console.log(color, x, y)
-    ctx.font = generateFontString(font)
-    if (color) ctx.fillStyle = color
-
-    const { text } = wrapText(child.nodeValue, maxWidth, font)
+    const { text } = wrapText(
+      child.nodeValue,
+      maxWidth,
+      font,
+      false,
+      node.quality,
+    )
 
     ctx.textBaseline = "top"
+    ctx.font = generateFontString(font, node.quality)
+    if (color) ctx.fillStyle = color
     ctx.fillText(text, x, y)
   }
 }
 
-export function resizeCanvas(canvas: Canvas, pct: number) {
+export function clearCanvas(canvas: Canvas) {
+  const ctx = canvas.getContext("2d")
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
+
+export function resizeCanvas(canvas: Canvas, multiplier: number) {
   const cw = canvas.width
   const ch = canvas.height
 
@@ -69,9 +78,19 @@ export function resizeCanvas(canvas: Canvas, pct: number) {
   tempCanvas.width = cw
   tempCanvas.height = ch
   tempCtx.drawImage(canvas, 0, 0)
-  canvas.width *= pct
-  canvas.height *= pct
+  canvas.width *= multiplier
+  canvas.height *= multiplier
 
   const ctx = canvas.getContext("2d")
-  ctx.drawImage(tempCanvas, 0, 0, cw, ch, 0, 0, cw * pct, ch * pct)
+  ctx.drawImage(
+    tempCanvas,
+    0,
+    0,
+    cw,
+    ch,
+    0,
+    0,
+    cw * multiplier,
+    ch * multiplier,
+  )
 }
