@@ -6,11 +6,14 @@
  */
 
 import { Component, createElement, Fragment } from "react"
-import { ElementName } from "./constants"
+import { ElementName } from "../constants"
 import { createNode } from "./helpers"
 import reconciler from "./reconciler"
 
-export default function renderDom(element: React.ReactNode) {
+export default function renderDom(
+  element: React.ReactElement,
+  callback?: () => void,
+) {
   const containerInfo = createNode(ElementName.Root)
 
   const container = reconciler.createContainer(
@@ -27,6 +30,8 @@ export default function renderDom(element: React.ReactNode) {
   reconciler.updateContainer(
     createElement(ErrorBoundary, null, element),
     container,
+    null,
+    callback,
   )
 
   return containerInfo

@@ -5,8 +5,6 @@ export interface ThemeStyle {
   borderColor?: string
   /** Change background color. */
   backgroundColor?: string
-  /** Change background color. */
-  backgroundImage?: string
 
   /** Add a border with a specified style. If `borderStyle` is `undefined` (which it is by default), no border will be added. */
   borderStyle?: "round" | "bevel" | "miter"

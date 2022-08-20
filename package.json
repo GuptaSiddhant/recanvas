@@ -30,8 +30,7 @@
     "dev": "run-p -cl dev:types dev:build",
     "dev:build": "node scripts/esbuild.js watch",
     "dev:types": "tsc --watch --preserveWatchOutput",
-    "example": "nodemon --watch dist --watch example --ext '*' --ignore 'example/.*.js' example/index.js",
-    "example2": "nodemon --watch dist --watch example --ext '*' example/index.ts",
+    "example": "nodemon --watch dist --watch example --ext '*' example/index.ts",
     "prebuild": "npm run build:types",
     "prepublishOnly": "npm run build"
   },

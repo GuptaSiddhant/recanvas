@@ -1,6 +1,12 @@
-// @ts-check
 import React from "react"
-import Recanvas, { RecanvasFontFamily, Text, View, Stage } from "../src"
+import {
+  RecanvasFontFamily,
+  Text,
+  View,
+  Stage,
+  renderCanvas,
+  Image,
+} from "../src"
 
 export default function (props: {
   width: number
@@ -8,7 +14,7 @@ export default function (props: {
   dpr?: number
   searchParams: URLSearchParams
 }) {
-  return Recanvas.render(<Basic {...props} />, { dpr: props.dpr })
+  return renderCanvas(<Basic {...props} />, { dpr: props.dpr })
 }
 
 function Basic({
@@ -34,13 +40,16 @@ function Basic({
         family: RecanvasFontFamily.Verdana,
       }}
     >
+      <Image style={{ padding: 40 }} src={"./example/image.jpeg"}>
+        <Text>Image art</Text>
+      </Image>
       <View
-        style={{ backgroundColor: "blue", padding: 20, alignItems: "center" }}
-      >
-        <Text>Hello World</Text>
-      </View>
-      <View
-        style={{ backgroundColor: "red", padding: 20, alignItems: "center" }}
+        style={{
+          flexGrow: 0,
+          backgroundColor: "red",
+          padding: 20,
+          alignItems: "center",
+        }}
       >
         <Text>
           Hello World from the land of Canvas. It is a beautiful day today.

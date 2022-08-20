@@ -1,7 +1,7 @@
 import type { RecanvasFont } from "../types"
 import type { TextMeasure } from "../canvas/text"
 import { measureText, wrapText } from "../canvas/text"
-import { ElementName, TEXT_NAME } from "./constants"
+import { ElementName, TEXT_NAME } from "../constants"
 import type { DOMElement, DOMNode } from "./dom-types"
 
 export function squashTextNodes(element: DOMElement): string {

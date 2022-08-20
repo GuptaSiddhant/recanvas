@@ -1,6 +1,6 @@
 import Yoga from "yoga-layout-prebuilt"
 
-import { ElementName, TEXT_NAME } from "./constants"
+import { ElementName, TEXT_NAME } from "../constants"
 import applyStyles from "./style"
 import { measureTextNode } from "./text"
 import type {
@@ -35,7 +35,7 @@ export function createNode(
   if (props.style) setStyle(node, props.style)
 
   for (const [key, value] of Object.entries(props)) {
-    if (["style"].includes(key)) continue
+    if (["style", "children"].includes(key)) continue
 
     setAttribute(node, key, value as DOMNodeAttribute)
   }

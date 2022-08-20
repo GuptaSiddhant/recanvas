@@ -2,6 +2,7 @@ export enum ElementName {
   Root = "canvas-root",
   Stage = "canvas-stage",
   View = "canvas-view",
+  Image = "canvas-image",
   Text = "canvas-text",
   VirtualText = "canvas-virtual-text",
 }

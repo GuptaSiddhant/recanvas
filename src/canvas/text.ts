@@ -1,6 +1,34 @@
-import { createCanvas } from "canvas"
+import { type CanvasRenderingContext2D, createCanvas } from "canvas"
+
+import { TEXT_NAME } from "../constants"
+import { type DOMElement } from "../dom"
 import store from "../store"
 import { type RecanvasFont } from "../types"
+
+export function insertTextToCanvas(
+  ctx: CanvasRenderingContext2D,
+  node: DOMElement,
+  x: number,
+  y: number,
+): void {
+  const { style = {}, yogaNode } = node
+
+  const maxWidth = yogaNode.getComputedWidth()
+  const color = style.color || store.font.color
+
+  const child = node.childNodes?.[0]
+  if (child.nodeName === TEXT_NAME) {
+    const { text } = wrapText(child.nodeValue, maxWidth, style, false, node.dpr)
+
+    ctx.save()
+    ctx.textBaseline = "top"
+    ctx.font = generateFontString(style, node.dpr)
+    if (color) ctx.fillStyle = color
+
+    ctx.fillText(text, x, y)
+    ctx.restore()
+  }
+}
 
 export function generateFontString(font: RecanvasFont = {}, dpr: number = 1) {
   const {

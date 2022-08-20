@@ -1,7 +1,7 @@
 import type Yoga from "yoga-layout-prebuilt"
 
 import type { RecanvasStyle } from "../types"
-import type { ElementName, TextName } from "./constants"
+import type { ElementName, TextName } from "../constants"
 
 export type OutputTransformer = (s: string) => string
 

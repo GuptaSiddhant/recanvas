@@ -1,8 +1,10 @@
-import { Canvas } from "canvas"
+import { loadImage } from "canvas"
 import express from "express"
 
+import { type Canvas } from "../src"
 import renderBasic from "./Basic"
-import renderSocial from "./Social"
+import renderTest from "./Test"
+// import renderSocial from "./Social"
 
 const app = express()
 
@@ -19,22 +21,35 @@ app.get("/", async (req, res) => {
 
   const canvas = await renderBasic({ width, height, dpr, searchParams })
 
-  return generateResponse(res, canvas, format)
+  return generateResponseFromCanvas(res, canvas, format)
 })
 
-app.get("/social", async (req, res) => {
+app.get("/test", async (req, res) => {
   logRequest(req)
 
   const searchParams = new URLSearchParams(
     req.url ? req.url.split("?")[1] : undefined,
   )
-  const dpr = Number(searchParams.get("dpr") || 1)
   const format = searchParams.get("format") || "png" // or "jpeg";
 
-  const canvas = await renderSocial({ dpr, searchParams })
+  const canvas = await renderTest()
 
-  return generateResponse(res, canvas, format)
+  return generateResponseFromCanvas(res, canvas, format)
 })
+
+// app.get("/social", async (req, res) => {
+//   logRequest(req)
+
+//   const searchParams = new URLSearchParams(
+//     req.url ? req.url.split("?")[1] : undefined,
+//   )
+//   const dpr = Number(searchParams.get("dpr") || 1)
+//   const format = searchParams.get("format") || "png" // or "jpeg";
+
+//   const canvas = await renderSocial({ dpr, searchParams })
+
+//   return generateResponseFromCanvas(res, canvas, format)
+// })
 
 const port = Number(process.argv.slice(2)[0] || 6001)
 app.listen(port, () => {
@@ -43,7 +58,7 @@ app.listen(port, () => {
 
 // Helpers
 
-function generateResponse(
+function generateResponseFromCanvas(
   res: express.Response,
   canvas: Canvas,
   format?: string,

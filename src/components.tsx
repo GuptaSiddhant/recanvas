@@ -1,7 +1,7 @@
 import { createElement } from "react"
 
 import type { LayoutStyle, ThemeStyle, RecanvasFont } from "./types"
-import { ElementName } from "./dom/constants"
+import { ElementName } from "./constants"
 
 // Stage
 
@@ -39,4 +39,14 @@ export interface TextProps {
 
 export function Text({ children, ...props }: TextProps) {
   return createElement(ElementName.Text, props, children)
+}
+
+// Image
+
+export interface ImageProps extends ViewProps {
+  src: string | Buffer
+}
+
+export function Image({ children, ...props }: ImageProps) {
+  return createElement(ElementName.Image, props, children)
 }

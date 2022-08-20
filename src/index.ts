@@ -1,26 +1,30 @@
 import renderNodeToCanvas from "./canvas"
 import renderDom from "./dom"
 import store from "./store"
-import { Text, View, Stage } from "./components"
-
-export default {
-  render: renderCanvas,
-  Text,
-  View,
-  Stage,
-}
 
 export interface RenderOptions {
+  /**
+   * Device Pixel Ratio (dpr) determines the quality.
+   * It is 1 by default, increase it for better quality (min: 0.1).
+   */
   dpr?: number
 }
 
+/**
+ * Generate Canvas by rendering the provided React Element.
+ *
+ * Asynchronous function. Must be awaited to get the Canvas.
+ */
 export async function renderCanvas(
-  element: React.ReactNode,
+  element: React.ReactElement,
   options: RenderOptions = {},
+  callback?: () => void,
 ) {
   store.dpr = options.dpr || 1
 
-  return renderNodeToCanvas(renderDom(element))
+  const node = renderDom(element, callback)
+
+  return renderNodeToCanvas(node)
 }
 
 // Components
@@ -36,3 +40,5 @@ export {
   RecanvasFontVariant,
   RecanvasFontWeight,
 } from "./types"
+
+export type { Canvas } from "canvas"

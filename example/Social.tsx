@@ -33,9 +33,7 @@ function Social(): JSX.Element {
         </Text>
       </View>
 
-      <View
-        style={{ width: "40%", backgroundImage: "./example/image-temp.jpeg" }}
-      ></View>
+      <View style={{ width: "40%" }}></View>
     </View>
   )
 }
