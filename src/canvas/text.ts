@@ -1,11 +1,8 @@
 import { createCanvas } from "canvas"
-import store from "src/store"
+import store from "../store"
 import { type RecanvasFont } from "../types"
 
-export function generateFontString(
-  font: RecanvasFont = {},
-  quality: number = 1,
-) {
+export function generateFontString(font: RecanvasFont = {}, dpr: number = 1) {
   const {
     family = store.font.family,
     size = store.font.size,
@@ -14,7 +11,7 @@ export function generateFontString(
     weight = store.font.weight,
   } = font
 
-  return `${style} ${variant} ${weight} ${size * quality}px "${family}"`
+  return `${style} ${variant} ${weight} ${size * dpr}px "${family}"`
 }
 
 export function wrapText(
@@ -22,19 +19,19 @@ export function wrapText(
   maxWidth: number,
   font: RecanvasFont = {},
   truncate: boolean = false,
-  quality: number,
+  dpr: number,
 ): { text: string; width: number; height: number } {
-  const textMeasure = measureText(text, font, quality)
+  const textMeasure = measureText(text, font, dpr)
 
   if (textMeasure.width < maxWidth) return { text, ...textMeasure }
 
-  const lines = splitTextInLines(text, maxWidth, font, quality)
+  const lines = splitTextInLines(text, maxWidth, font, dpr)
 
   if (truncate) {
     const truncatedText = lines[0] + "..."
     return {
       text: truncatedText + "...",
-      ...measureText(truncatedText, font, quality),
+      ...measureText(truncatedText, font, dpr),
     }
   }
 
@@ -43,7 +40,7 @@ export function wrapText(
   let height: number = 0
 
   lines.forEach((line) => {
-    const { width: w, height: h } = measureText(line, font, quality)
+    const { width: w, height: h } = measureText(line, font, dpr)
     width = Math.max(width, w)
     height += h
   })
@@ -59,14 +56,14 @@ export interface TextMeasure {
 export function measureText(
   text: string,
   font: RecanvasFont = {},
-  quality: number,
+  dpr: number,
 ): TextMeasure {
   if (text.length === 0) return { width: 0, height: 0 }
 
-  const lineHeight = (font?.lineHeight || store.font.lineHeight) * quality
+  const lineHeight = (font?.lineHeight || store.font.lineHeight) * dpr
   const canvas = createCanvas(1000, 1000)
   const context = canvas.getContext("2d")
-  context.font = generateFontString(font, quality)
+  context.font = generateFontString(font, dpr)
 
   context.textBaseline = "top"
   const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } =
@@ -83,14 +80,14 @@ function splitTextInLines(
   text: string,
   maxWidth: number,
   font: RecanvasFont = {},
-  quality: number,
+  dpr: number,
 ) {
   const words = text.split(" ")
   const lines: string[] = []
   let currentLine = ""
 
   for (const word of words) {
-    const width = measureText(currentLine + word, font, quality).width
+    const width = measureText(currentLine + word, font, dpr).width
     if (width < maxWidth) {
       currentLine += word + " "
     } else {

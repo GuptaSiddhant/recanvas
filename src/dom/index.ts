@@ -5,31 +5,56 @@
  * @see https://github.com/vadimdemedes/ink/blob/v3.2.0/license
  */
 
-import type { RecanvasStyle } from "../types"
+import { Component, createElement, Fragment } from "react"
 import { ElementName } from "./constants"
 import { createNode } from "./helpers"
 import reconciler from "./reconciler"
 
-export default function renderDom(
-  element: React.ReactNode,
-  style: RecanvasStyle,
-) {
-  const root = createNode(ElementName.Root, { style })
+export default function renderDom(element: React.ReactNode) {
+  const containerInfo = createNode(ElementName.Root)
 
   const container = reconciler.createContainer(
-    root,
+    containerInfo,
     0,
     null,
     false,
     false,
-    "",
+    "Recanvas",
     () => {},
     null,
   )
 
-  reconciler.updateContainer(element, container, null)
+  reconciler.updateContainer(
+    createElement(ErrorBoundary, null, element),
+    container,
+  )
 
-  return root
+  return containerInfo
 }
 
 export * from "./dom-types"
+
+class ErrorBoundary extends Component<any, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: unknown) {
+    console.log("---- ---- ----")
+    console.log(error.message)
+    console.log("---- ---- ----")
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return Fragment
+    }
+
+    return this.props.children
+  }
+}

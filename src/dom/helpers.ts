@@ -11,7 +11,7 @@ import type {
   TextNode,
 } from "./dom-types"
 import type { RecanvasStyle } from "../types"
-import store from "src/store"
+import store from "../store"
 
 export function createNode(
   nodeName: ElementName,
@@ -24,7 +24,7 @@ export function createNode(
     childNodes: [],
     parentNode: null,
     yogaNode: Yoga.Node.create(),
-    quality: store.quality,
+    dpr: store.dpr,
   }
 
   if (nodeName === ElementName.Text) {
@@ -33,8 +33,9 @@ export function createNode(
   }
 
   if (props.style) setStyle(node, props.style)
+
   for (const [key, value] of Object.entries(props)) {
-    if (Object.keys(props).includes(key)) continue
+    if (["style"].includes(key)) continue
 
     setAttribute(node, key, value as DOMNodeAttribute)
   }
@@ -49,7 +50,7 @@ export function createTextNode(text: string): TextNode {
     yogaNode: undefined,
     parentNode: null,
     style: {},
-    quality: store.quality,
+    dpr: store.dpr,
   }
 
   setTextNodeValue(node, text)
@@ -60,7 +61,7 @@ export function createTextNode(text: string): TextNode {
 // update
 
 export function setStyle(node: DOMNode, style: RecanvasStyle): void {
-  const enrichedStyle = { ...style, quality: store.quality }
+  const enrichedStyle = { ...style, dpr: store.dpr }
   node.style = enrichedStyle
   if (node.yogaNode) applyStyles(node, enrichedStyle)
 }

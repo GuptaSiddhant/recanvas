@@ -20,7 +20,7 @@ This allows for server-side rendering without using browser environment.
 Alone, imperative canvas is very difficult to work with,
 so this library provides `React` components to abstract the canvas methods.
 Furthermore, it uses `yoga-layout` to layout the components,
-so the canvas can be created with same principles of a flexbox.
+so the canvas can be created with same principles of a flex-box.
 
 ## Installation
 
@@ -35,24 +35,24 @@ yarn add recanvas
 ### Generate a canvas
 
 ```jsx
-import { View, Text, renderCanvas } from "recanvas"
+import { View, Text, Stage, renderCanvas } from "recanvas"
 
 function generateCanvas() {
-  const canvas = renderCanvas(<SocialImage />, {
-    width: 400,
-    height: 300, // optional, default is equal to width
-    quality: 2, // quality is 1 by default, increase it for better quality (min: 0.1)
-    font: { color: "#ffffff", size: 20 }, // Override default font options
-  })
+  const canvas = renderCanvas(
+    <SocialImage />, // Element to be rendered on canvas
+    dpr: 2, // quality is 1 by default, increase it for better quality (min: 0.1)
+  )
 
-  return canvas
+  return canvas //
 }
 
 function SocialImage() {
   return (
-    <View style={{ backgroundColor: "red", padding: 20 }}>
-      <Text style={{ color: "white" }}>Hello World</Text>
-    </View>
+    <Stage style={{ width: 400, height: 300 }} font={{ color: "white" }}>
+      <View style={{ backgroundColor: "red", padding: 20 }}>
+        <Text>Hello World</Text>
+      </View>
+    </Stage>
   )
 }
 ```
@@ -79,7 +79,7 @@ function SocialImage() {
 - Remix-run / Native Response
 
   ```js
-  const loader = () => {
+  export function loader() {
     const canvas = generateCanvas()
     const buffer = canvas.toBuffer() // Node.Buffer (default mimeType: image/png)
 

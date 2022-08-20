@@ -18,14 +18,14 @@ const DEFAULT_FONT: Required<RecanvasFont> = {
 }
 
 class Store {
-  #quality = 1
+  #dpr = 1
   #font: Required<RecanvasFont> = DEFAULT_FONT
 
-  get quality() {
-    return this.#quality
+  get dpr() {
+    return this.#dpr
   }
-  set quality(value: number) {
-    this.#quality = Math.max(0.1, value)
+  set dpr(value: number) {
+    this.#dpr = Math.max(0.1, value)
   }
 
   get font(): Required<RecanvasFont> {

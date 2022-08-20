@@ -1,27 +1,11 @@
-// @ts-check
 import React from "react"
-import {
-  RecanvasFontFamily,
-  RecanvasFontWeight,
-  renderCanvas,
-  Text,
-  View,
-} from "../dist/index.js"
+import { RecanvasFontWeight, renderCanvas, Text, View } from "../src"
 
 export default function (props: {
-  width: number
-  height: number
-  quality?: number
+  dpr?: number
   searchParams: URLSearchParams
 }) {
-  return renderCanvas(<Social />, {
-    ...props,
-    font: {
-      size: 16,
-      color: "white",
-      family: RecanvasFontFamily.Verdana,
-    },
-  })
+  return renderCanvas(<Social />, { dpr: props.dpr })
 }
 
 function Social(): JSX.Element {
@@ -31,12 +15,15 @@ function Social(): JSX.Element {
         flexDirection: "row",
         backgroundColor: "#000",
         padding: 20,
+        // backgroundImage: "./example/image-temp.jpeg",
+        // backgroundImage:
+        //   "https://images.pexels.com/photos/13248572/pexels-photo-13248572.jpeg?auto=compress&cs=tinysrgb&h=750",
       }}
     >
       <View
         style={{
           backgroundColor: "#171717",
-          padding: 20,
+          // padding: 20,
           flexDirection: "column",
           width: "60%",
         }}
@@ -44,18 +31,11 @@ function Social(): JSX.Element {
         <Text style={{ size: 32, weight: RecanvasFontWeight.Bold }}>
           Title of the blog post.
         </Text>
-        <Text>Author name</Text>
       </View>
+
       <View
-        style={{
-          backgroundColor: "grey",
-          padding: 20,
-          alignItems: "center",
-          width: "40%",
-        }}
-      >
-        <Text>Image Area</Text>
-      </View>
+        style={{ width: "40%", backgroundImage: "./example/image-temp.jpeg" }}
+      ></View>
     </View>
   )
 }

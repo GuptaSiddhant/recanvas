@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Script to build CLI with esbuild.
 
-import esbuild from "esbuild"
+const esbuild = require("esbuild")
 
 const args = process.argv.slice(2)
 const watch = args.includes("watch")
@@ -11,7 +11,14 @@ const commonBuildOptions = {
   entryPoints: ["src/index.ts"],
   color: true,
   bundle: true,
-  external: ["react", "react-reconciler", "canvas", "yoga-layout-prebuilt"],
+  external: [
+    "react",
+    "react-reconciler",
+    "canvas",
+    "yoga-layout-prebuilt",
+    "@remix-run/*",
+    "fs",
+  ],
   logLevel: "info",
   target: "es2015",
   minify: !watch,

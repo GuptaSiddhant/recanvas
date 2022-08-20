@@ -37,7 +37,7 @@ export function measureTextNode(
   const text =
     node.nodeName === TEXT_NAME ? node.nodeValue : squashTextNodes(node)
 
-  const dimensions = measureText(text, font, node.quality)
+  const dimensions = measureText(text, font, node.dpr)
 
   // Text fits into container, no need to wrap
   if (dimensions.width <= maxWidth) {
@@ -51,8 +51,8 @@ export function measureTextNode(
   }
 
   const truncate = font?.truncate
-  const quality = node.quality
-  const { height, width } = wrapText(text, maxWidth, font, truncate, quality)
+  const dpr = node.dpr
+  const { height, width } = wrapText(text, maxWidth, font, truncate, dpr)
 
   return { height, width }
 }

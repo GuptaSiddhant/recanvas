@@ -1,11 +1,16 @@
 import { type Canvas, createCanvas } from "canvas"
-import { ElementName } from "src/dom/constants"
 
+import { ElementName } from "../dom/constants"
 import type { DOMNode } from "../dom"
 import Yoga from "yoga-layout-prebuilt"
-import { clearCanvas, insertTextNode, insertViewNode } from "./helpers"
+import {
+  clearCanvas,
+  insertImageToCanvas,
+  insertTextToCanvas,
+  insertViewToCanvas,
+} from "./helpers"
 
-export default function render(node: DOMNode): Canvas {
+export default async function render(node: DOMNode): Promise<Canvas> {
   if (!node.yogaNode)
     throw new Error("Root element must have a attached YogaNode.")
 
@@ -16,16 +21,16 @@ export default function render(node: DOMNode): Canvas {
     node.yogaNode.getComputedHeight(),
   )
 
-  renderDOMNodeToCanvas(canvas, node)
+  await renderDOMNodeToCanvas(canvas, node)
 
   return canvas
 }
 
-function renderDOMNodeToCanvas(
+async function renderDOMNodeToCanvas(
   canvas: Canvas,
   node: DOMNode,
   options: { offsetX?: number; offsetY?: number } = {},
-): void {
+): Promise<void> {
   const { yogaNode, nodeName } = node
   const { offsetX = 0, offsetY = 0 } = options
 
@@ -38,12 +43,12 @@ function renderDOMNodeToCanvas(
   const y = offsetY + yogaNode.getComputedTop()
 
   if (nodeName === ElementName.Text) {
-    insertTextNode(canvas, node, x, y)
-    return
+    return insertTextToCanvas(canvas, node, x, y)
   }
 
-  if (nodeName === ElementName.View) {
-    insertViewNode(canvas, node, x, y)
+  if (nodeName === ElementName.View || nodeName === ElementName.Stage) {
+    insertViewToCanvas(canvas, node, x, y)
+    await insertImageToCanvas(canvas, node, x, y)
   }
 
   // For Root and View

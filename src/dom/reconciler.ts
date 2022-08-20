@@ -1,6 +1,8 @@
 import createReconciler, { type Fiber, type HostConfig } from "react-reconciler"
 
 import Yoga from "yoga-layout-prebuilt"
+import type { RecanvasStyle } from "../types"
+import store from "../store"
 import { ElementName } from "./constants"
 import {
   appendChildNode,
@@ -13,7 +15,6 @@ import {
   setStyle,
   setTextNodeValue,
 } from "./helpers"
-import type { RecanvasStyle } from "../types"
 import type {
   DOMElement,
   DOMNode,
@@ -24,6 +25,7 @@ import type {
 
 interface HostContext {
   isInsideText: boolean
+  isInsideStage: boolean
 }
 
 const hostConfig: HostConfig<
@@ -63,15 +65,22 @@ const hostConfig: HostConfig<
   // context
 
   getRootHostContext() {
-    return { isInsideText: false }
+    return { isInsideText: false, isInsideStage: false }
   },
 
   getChildHostContext(parentHostContext, type) {
     const previousIsInsideText = parentHostContext.isInsideText
-    const isInsideText = type === "canvas-text"
+    const previousIsInsideStage = parentHostContext.isInsideStage
+    const isInsideText = type === ElementName.Text
+    const isInsideStage = type === ElementName.Stage
 
-    if (previousIsInsideText === isInsideText) return parentHostContext
-    return { isInsideText }
+    return {
+      isInsideText:
+        previousIsInsideText === isInsideText
+          ? previousIsInsideText
+          : isInsideText,
+      isInsideStage: previousIsInsideStage || isInsideStage,
+    }
   },
 
   // add
@@ -100,14 +109,28 @@ const hostConfig: HostConfig<
     if (hostContext.isInsideText && originalType === ElementName.View) {
       throw new Error(`<View> can not be nested inside <Text> component`)
     }
+
+    if (
+      originalType !== ElementName.Stage &&
+      originalType !== ElementName.Root &&
+      !hostContext.isInsideStage
+    ) {
+      throw new Error(
+        `All components should be nested inside <Stage> component`,
+      )
+    }
+
+    if (originalType === ElementName.Stage) {
+      const font = (props as any).font
+      if (font) store.font = font
+    }
+
     const type =
       originalType === ElementName.Text && hostContext.isInsideText
         ? ElementName.VirtualText
         : originalType
 
-    const node = createNode(type, props)
-
-    return node
+    return createNode(type, props)
   },
 
   createTextInstance: function (text, _rootContainer, hostContext) {

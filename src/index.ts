@@ -1,32 +1,30 @@
 import renderNodeToCanvas from "./canvas"
 import renderDom from "./dom"
 import store from "./store"
-import type { RecanvasFont } from "./types"
+import { Text, View, Stage } from "./components"
 
-export interface RenderCanvasOptions {
-  width: number
-  height: number
-  quality?: number
-  font?: RecanvasFont
+export default {
+  render: renderCanvas,
+  Text,
+  View,
+  Stage,
 }
 
-export function renderCanvas(
+export interface RenderOptions {
+  dpr?: number
+}
+
+export async function renderCanvas(
   element: React.ReactNode,
-  options: RenderCanvasOptions,
+  options: RenderOptions = {},
 ) {
-  const { height, width, font, quality } = options
+  store.dpr = options.dpr || 1
 
-  if (quality) store.quality = quality
-  if (font) store.font = font
-
-  const node = renderDom(element, { width, height })
-
-  return renderNodeToCanvas(node)
+  return renderNodeToCanvas(renderDom(element))
 }
 
 // Components
-export { type TextProps, Text } from "./components/Text"
-export { type ViewProps, View } from "./components/View"
+export * from "./components"
 
 // Enums and Types
 export {

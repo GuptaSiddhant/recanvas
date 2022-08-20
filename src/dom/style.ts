@@ -29,31 +29,31 @@ function applyPositionStyles(
 }
 
 function applyMarginStyles(element: DOMElement, style: LayoutStyle): void {
-  const { quality, yogaNode: node } = element
+  const { dpr, yogaNode: node } = element
   const { margin, marginHorizontal, marginVertical } = style
   const marginLeft = margin || marginHorizontal || style.marginLeft
   const marginRight = margin || marginHorizontal || style.marginRight
   const marginTop = margin || marginVertical || style.marginTop
   const marginBottom = margin || marginVertical || style.marginBottom
 
-  if (marginLeft) node.setMargin(Yoga.EDGE_START, marginLeft * quality)
-  if (marginRight) node.setMargin(Yoga.EDGE_END, marginRight * quality)
-  if (marginTop) node.setMargin(Yoga.EDGE_TOP, marginTop * quality)
-  if (marginBottom) node.setMargin(Yoga.EDGE_BOTTOM, marginBottom * quality)
+  if (marginLeft) node.setMargin(Yoga.EDGE_START, marginLeft * dpr)
+  if (marginRight) node.setMargin(Yoga.EDGE_END, marginRight * dpr)
+  if (marginTop) node.setMargin(Yoga.EDGE_TOP, marginTop * dpr)
+  if (marginBottom) node.setMargin(Yoga.EDGE_BOTTOM, marginBottom * dpr)
 }
 
 function applyPaddingStyles(element: DOMElement, style: LayoutStyle): void {
-  const { quality, yogaNode: node } = element
+  const { dpr, yogaNode: node } = element
   const { padding, paddingHorizontal, paddingVertical } = style
   const paddingLeft = padding || paddingHorizontal || style.paddingLeft
   const paddingRight = padding || paddingHorizontal || style.paddingRight
   const paddingTop = padding || paddingVertical || style.paddingTop
   const paddingBottom = padding || paddingVertical || style.paddingBottom
 
-  if (paddingLeft) node.setPadding(Yoga.EDGE_LEFT, paddingLeft * quality)
-  if (paddingRight) node.setPadding(Yoga.EDGE_RIGHT, paddingRight * quality)
-  if (paddingTop) node.setPadding(Yoga.EDGE_TOP, paddingTop * quality)
-  if (paddingBottom) node.setPadding(Yoga.EDGE_BOTTOM, paddingBottom * quality)
+  if (paddingLeft) node.setPadding(Yoga.EDGE_LEFT, paddingLeft * dpr)
+  if (paddingRight) node.setPadding(Yoga.EDGE_RIGHT, paddingRight * dpr)
+  if (paddingTop) node.setPadding(Yoga.EDGE_TOP, paddingTop * dpr)
+  if (paddingBottom) node.setPadding(Yoga.EDGE_BOTTOM, paddingBottom * dpr)
 }
 
 function applyFlexStyles(element: DOMElement, style: LayoutStyle): void {
@@ -122,15 +122,15 @@ function applyFlexStyles(element: DOMElement, style: LayoutStyle): void {
 }
 
 function applyDimensionStyles(element: DOMElement, style: LayoutStyle): void {
-  const { quality, yogaNode: node } = element
+  const { dpr, yogaNode: node } = element
   const { width, height, minWidth, minHeight, maxHeight, maxWidth } = style
 
-  if (typeof width === "number") node.setWidth(width * quality)
+  if (typeof width === "number") node.setWidth(width * dpr)
   else if (typeof width === "string")
     node.setWidthPercent(Number.parseInt(width, 10))
   else node.setWidthAuto()
 
-  if (typeof height === "number") node.setHeight(height * quality)
+  if (typeof height === "number") node.setHeight(height * dpr)
   else if (typeof height === "string")
     node.setHeightPercent(Number.parseInt(height, 10))
   else node.setHeightAuto()
@@ -138,25 +138,25 @@ function applyDimensionStyles(element: DOMElement, style: LayoutStyle): void {
   if (minWidth) {
     if (typeof minWidth === "string")
       node.setMinWidthPercent(Number.parseInt(minWidth, 10))
-    else node.setMinWidth(minWidth * quality)
+    else node.setMinWidth(minWidth * dpr)
   }
 
   if (minHeight) {
     if (typeof minHeight === "string")
       node.setMinHeightPercent(Number.parseInt(minHeight, 10))
-    else node.setMinHeight(minHeight * quality)
+    else node.setMinHeight(minHeight * dpr)
   }
 
   if (maxWidth) {
     if (typeof maxWidth === "string")
       node.setMaxWidthPercent(Number.parseInt(maxWidth, 10))
-    else node.setMaxWidth(maxWidth * quality)
+    else node.setMaxWidth(maxWidth * dpr)
   }
 
   if (maxHeight) {
     if (typeof maxHeight === "string")
       node.setMaxHeightPercent(Number.parseInt(maxHeight, 10))
-    else node.setMaxHeight(maxHeight * quality)
+    else node.setMaxHeight(maxHeight * dpr)
   }
 }
 
@@ -170,11 +170,11 @@ function applyDisplayStyles(
 }
 
 function applyBorderStyles(element: DOMElement, style: LayoutStyle): void {
-  const { quality, yogaNode: node } = element
+  const { dpr, yogaNode: node } = element
   const { borderWidth = 0 } = style
 
-  node.setBorder(Yoga.EDGE_TOP, borderWidth * quality)
-  node.setBorder(Yoga.EDGE_BOTTOM, borderWidth * quality)
-  node.setBorder(Yoga.EDGE_LEFT, borderWidth * quality)
-  node.setBorder(Yoga.EDGE_RIGHT, borderWidth * quality)
+  node.setBorder(Yoga.EDGE_TOP, borderWidth * dpr)
+  node.setBorder(Yoga.EDGE_BOTTOM, borderWidth * dpr)
+  node.setBorder(Yoga.EDGE_LEFT, borderWidth * dpr)
+  node.setBorder(Yoga.EDGE_RIGHT, borderWidth * dpr)
 }
