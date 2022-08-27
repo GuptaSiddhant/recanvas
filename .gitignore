@@ -6,3 +6,4 @@ dist
 **/*/dist
 
 example/.*
+yarn-error.log

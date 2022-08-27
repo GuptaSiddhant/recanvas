@@ -1,14 +1,59 @@
-#!/usr/bin/env node
-// Script to publish to NPM.
-// @ts-check
-
+const esbuild = require("esbuild")
 const { npmPublish } = require("@jsdevtools/npm-publish")
 const { spawnSync } = require("child_process")
 const { readFileSync, writeFileSync } = require("fs")
-
 const manifestPath = "./package.json"
 
-publishToNpm().then(handleSuccess).catch(handleError)
+module.exports = { publish, build }
+
+// BUILD
+
+/** @param  {import("esbuild").BuildOptions} options */
+function build(watch = false, options = {}) {
+  /** @type import("esbuild").BuildOptions */
+  const commonBuildOptions = {
+    entryPoints: ["src/index.ts"],
+    color: true,
+    bundle: true,
+    external: [
+      "react",
+      "react-reconciler",
+      "canvas",
+      "yoga-layout-prebuilt",
+      "@remix-run/*",
+      "fs",
+    ],
+    logLevel: "info",
+    target: "es2015",
+    minify: !watch,
+    ...options,
+  }
+
+  esbuild
+    .build({
+      ...commonBuildOptions,
+      outfile: "dist/index.js",
+      platform: "neutral",
+      watch,
+    })
+    .catch(() => process.exit(1))
+
+  if (!watch) {
+    esbuild
+      .build({
+        ...commonBuildOptions,
+        outfile: "dist/index.cjs",
+        platform: "node",
+      })
+      .catch(() => process.exit(1))
+  }
+}
+
+// PUBLISH
+
+function publish() {
+  publishToNpm().then(handleSuccess).catch(handleError)
+}
 
 async function publishToNpm() {
   console.log("Publishing package to NPM...")
