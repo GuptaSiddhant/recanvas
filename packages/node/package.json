@@ -1,6 +1,6 @@
 {
   "name": "@recanvas/node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/GuptaSiddhant/recanvas.git",
@@ -38,14 +38,14 @@
   "dependencies": {
     "canvas": "^2.9.3",
     "react-reconciler": "^0.29.0",
-    "yoga-layout-prebuilt": "^1.10.0",
-    "@recanvas/utils": "*"
+    "yoga-layout-prebuilt": "^1.10.0"
   },
   "peerDependencies": {
     "react": "*"
   },
   "devDependencies": {
     "@jsdevtools/npm-publish": "^1.4.3",
+    "@recanvas/utils": "*",
     "@types/express": "^4.17.13",
     "@types/node": "^16.0.0",
     "@types/react-reconciler": "^0",
