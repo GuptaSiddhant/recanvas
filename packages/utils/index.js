@@ -72,7 +72,7 @@ async function publishToNpm() {
 }
 
 async function publishLatest(version) {
-  const result = await npmPublish({ checkVersion: true })
+  const result = await npmPublish({ checkVersion: true, access: "public" })
   gitTag(version)
 
   return result
@@ -84,7 +84,7 @@ async function publishCanary(manifest, tag = "canary") {
   writeFileSync(manifestPath, JSON.stringify(canaryManifest, null, 2))
 
   console.log("Publishing", tag, "version:", canaryVersion)
-  return npmPublish({ tag })
+  return npmPublish({ tag, access: "public" })
 }
 
 /** @param {import("@jsdevtools/npm-publish").Results} results */
