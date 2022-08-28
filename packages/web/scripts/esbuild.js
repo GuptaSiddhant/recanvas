@@ -4,4 +4,4 @@
 const args = process.argv.slice(2)
 const watch = args.includes("watch")
 
-require("@recanvas-libs/utils").build(watch)
+require("@recanvas-libs/utils").build(watch, {}, false)

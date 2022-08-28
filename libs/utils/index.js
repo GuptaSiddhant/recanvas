@@ -9,7 +9,7 @@ module.exports = { publish, build }
 // BUILD
 
 /** @param  {import("esbuild").BuildOptions} options */
-function build(watch = false, options = {}) {
+function build(watch = false, options = {}, cjs = true) {
   /** @type import("esbuild").BuildOptions */
   const commonBuildOptions = {
     entryPoints: ["src/index.ts"],
@@ -19,6 +19,7 @@ function build(watch = false, options = {}) {
       "react",
       "react-reconciler",
       "canvas",
+      "yoga-layout",
       "yoga-layout-prebuilt",
       "@remix-run/*",
       "fs",
@@ -38,7 +39,7 @@ function build(watch = false, options = {}) {
     })
     .catch(() => process.exit(1))
 
-  if (!watch) {
+  if (!watch && cjs) {
     esbuild
       .build({
         ...commonBuildOptions,

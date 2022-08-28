@@ -1,5 +1,5 @@
 {
-  "name": "@recanvas/utils",
+  "name": "@recanvas-libs/utils",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,

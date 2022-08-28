@@ -33,5 +33,8 @@ jobs:
       - name: Publish @recanvas/node to NPM
         run: cd packages/node; node scripts/publish.js
 
-      - name: Push changes to repo
-        run: git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
+      - name: Publish @recanvas/web to NPM
+        run: cd packages/web; node scripts/publish.js
+
+      # - name: Push changes to repo
+      #   run: git push "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --follow-tags
