@@ -39,14 +39,15 @@
     "react-reconciler": "^0.29.0"
   },
   "peerDependencies": {
-    "react": "17 | 18"
+    "react": "*"
   },
   "devDependencies": {
-    "react": "*",
-    "@recanvas-libs/utils": "*",
+    "@recanvas-utils/build": "*",
+    "@recanvas-utils/publish": "*",
     "@types/node": "^16.0.0",
     "@types/react-reconciler": "^0",
     "npm-run-all": "^4.1.5",
+    "react": "*",
     "typescript": "^4.7.4"
   }
 }

@@ -2,4 +2,4 @@
 // Script to publish to NPM.
 // @ts-check
 
-require("@recanvas-libs/utils").publish()
+require("@recanvas-utils/publish")()

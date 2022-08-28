@@ -1,10 +1,9 @@
 {
-  "name": "@recanvas-libs/utils",
+  "name": "@recanvas-utils/build",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "@jsdevtools/npm-publish": "^1.4.3",
     "esbuild": "^0.15.0"
   }
 }

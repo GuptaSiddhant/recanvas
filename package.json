@@ -15,8 +15,8 @@
   },
   "workspaces": [
     "apps/*",
-    "libs/*",
-    "packages/*"
+    "packages/*",
+    "utils/*"
   ],
   "keywords": [
     "react",

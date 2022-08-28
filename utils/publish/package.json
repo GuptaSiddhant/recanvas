@@ -1,0 +1,9 @@
+{
+  "name": "@recanvas-utils/publish",
+  "version": "0.0.0",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "@jsdevtools/npm-publish": "^1.4.3"
+  }
+}

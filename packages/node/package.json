@@ -45,7 +45,8 @@
   },
   "devDependencies": {
     "@jsdevtools/npm-publish": "^1.4.3",
-    "@recanvas-libs/utils": "*",
+    "@recanvas-utils/build": "*",
+    "@recanvas-utils/publish": "*",
     "@types/express": "^4.17.13",
     "@types/node": "^16.0.0",
     "@types/react-reconciler": "^0",
