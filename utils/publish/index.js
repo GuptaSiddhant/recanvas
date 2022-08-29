@@ -1,3 +1,5 @@
+// @ts-check
+
 const { npmPublish } = require("@jsdevtools/npm-publish")
 const { spawnSync } = require("child_process")
 const { readFileSync, writeFileSync } = require("fs")

@@ -1,3 +1,5 @@
+import { type DOMNode, NodeName } from "../renderer/types"
+
 export { insertImage } from "./image"
 
 export function createCanvas(
@@ -11,66 +13,32 @@ export function createCanvas(
   return canvas
 }
 
-// import { ElementName } from "../constants"
-// // import type { DOMNode } from "../dom"
-// import Yoga from "yoga-layout-prebuilt"
-// import { clearCanvas } from "./helpers"
-// import { insertTextToCanvas } from "./text"
-// import { insertImageToCanvas } from "./image"
-// import { insertViewToCanvas } from "./view"
+export function insertChildToCanvas(
+  ctx: CanvasRenderingContext2D,
+  child: DOMNode,
+) {
+  if (!child.nodeName) return
 
-// export default async function render(node: DOMNode): Promise<Canvas> {
-//   if (!node.yogaNode)
-//     throw new Error("Root element must have a attached YogaNode.")
-
-//   node.yogaNode.calculateLayout(undefined, undefined, Yoga.DIRECTION_LTR)
-
-//   const canvas = new Canvas(
-//     node.yogaNode.getComputedWidth(),
-//     node.yogaNode.getComputedHeight(),
-//     "image",
-//   )
-
-//   const ctx = canvas.getContext("2d")
-//   await renderDOMNodeToCanvas(ctx, node)
-
-//   return canvas
-// }
-
-// async function renderDOMNodeToCanvas(
-//   ctx: CanvasRenderingContext2D,
-//   node: DOMNode,
-//   options: { offsetX?: number; offsetY?: number } = {},
-// ): Promise<void> {
-//   const { yogaNode, nodeName } = node
-//   const { offsetX = 0, offsetY = 0 } = options
-
-//   if (!yogaNode) return
-//   if (nodeName === ElementName.Root) clearCanvas(ctx)
-//   if (nodeName === ElementName.VirtualText) return
-//   if (yogaNode.getDisplay() === Yoga.DISPLAY_NONE) return
-
-//   const x = offsetX + yogaNode.getComputedLeft()
-//   const y = offsetY + yogaNode.getComputedTop()
-
-//   if (nodeName === ElementName.Text) {
-//     return insertTextToCanvas(ctx, node, x, y)
-//   }
-
-//   if (nodeName !== ElementName.Root) {
-//     insertViewToCanvas(ctx, node, x, y)
-//     // if (nodeName === ElementName.Image) {
-//     await insertImageToCanvas(ctx, node, x, y)
-//     // }
-//   }
-
-//   // For Root and View
-//   for (const childNode of node.childNodes) {
-//     renderDOMNodeToCanvas(ctx, childNode, {
-//       offsetX: x,
-//       offsetY: y,
-//     })
-//   }
-
-//   return
-// }
+  switch (child.nodeName) {
+    case NodeName.View: {
+      const { x, y, width, height, style } = child.props
+      ctx.fillStyle = style?.color || "black"
+      ctx.fillRect(x, y, width, height)
+      break
+    }
+    // case TEXT_NAME: {
+    //   ctx.font = "40px Arial"
+    //   ctx.fillStyle = "white"
+    //   ctx.fillText(child.nodeValue, 0, 0)
+    //   break
+    // }
+    // case ElementName.Text: {
+    //   ctx.font = "20px Arial"
+    //   ctx.fillStyle = "white"
+    //   ctx.fillText(child.props.children?.toString() || "", 0, 0)
+    //   break
+    // }
+    default:
+      console.log("appendChild - not implemented", child)
+  }
+}
